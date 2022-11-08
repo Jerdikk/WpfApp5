@@ -1,0 +1,47 @@
+﻿<Window x:Class="WpfApp5.Window2"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:col="clr-namespace:System.Collections;assembly=mscorlib"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
+        xmlns:local="clr-namespace:WpfApp5"        
+        mc:Ignorable="d"                
+        Title="Window2" Height="450" Width="800">
+    <Grid x:Name="mainGrod">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="5" />
+            <ColumnDefinition Width="*" MinWidth="100"/>
+            <ColumnDefinition Width="5" />
+        </Grid.ColumnDefinitions>
+        <GridSplitter x:Name="gs1" Grid.Column="1" Width="5" HorizontalAlignment="Stretch" DragStarted="GridSplitter_DragStarted" DragCompleted="GridSplitter_DragCompleted" />
+        <GridSplitter x:Name="gs2" Grid.Column="3" Width="5" HorizontalAlignment="Stretch" DragStarted="GridSplitter_DragStarted" DragCompleted="GridSplitter_DragCompleted" />
+
+        <ScrollViewer Grid.Column="0" HorizontalScrollBarVisibility="Visible">
+            <DataGrid x:Name="dgTable1"  ItemsSource="{Binding data}"  VerticalAlignment="Top" HorizontalAlignment="Left" Margin="15,15,0,0" Loaded="dgTable1_Loaded" Height="325" Width="316">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Продукт" Width="175" Binding="{Binding Path=ID}"></DataGridTextColumn>
+                    <DataGridTextColumn Header="Цена" ></DataGridTextColumn>
+                    <DataGridComboBoxColumn Header="Категория" >
+                        <DataGridComboBoxColumn.ItemsSource>
+                            <col:ArrayList>
+                                <sys:String>General</sys:String>
+                                <sys:String>Communications</sys:String>
+                                <sys:String>Deception</sys:String>
+                                <sys:String>Munitions</sys:String>
+                                <sys:String>Protection</sys:String>
+                                <sys:String>Tools</sys:String>
+                                <sys:String>Travel</sys:String>
+                            </col:ArrayList>
+                        </DataGridComboBoxColumn.ItemsSource>
+                    </DataGridComboBoxColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+        </ScrollViewer>
+        <Grid x:Name="grid2" Grid.Column="2" MinWidth="100" ShowGridLines="True">
+            <Button x:Name="but" Width="120" Height="30" Content="Button" Click="Button_Click"></Button>
+            <!-- Width="{Binding ElementName=grid2,Path=Width}" -->
+        </Grid>
+    </Grid>
+</Window>

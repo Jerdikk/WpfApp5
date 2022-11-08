@@ -56,30 +56,23 @@ namespace WpfApp5
     {
         private void GetColorId()
         {
-            ColorCollection.Add(new ColorsServices(0, Colors.Black, nameof(Colors.Black)));
-            ColorCollection.Add(new ColorsServices(1, Colors.Yellow, nameof(Colors.Yellow)));
-            ColorCollection.Add(new ColorsServices(2, Colors.Green, nameof(Colors.Green)));
-            ColorCollection.Add(new ColorsServices(3, Colors.Gray, nameof(Colors.Gray)));
-            ColorCollection.Add(new ColorsServices(4, Colors.PaleGreen, nameof(Colors.PaleGreen)));
-            ColorCollection.Add(new ColorsServices(5, Colors.Violet, nameof(Colors.Violet)));
-            ColorCollection.Add(new ColorsServices(6, Colors.CadetBlue, nameof(Colors.CadetBlue)));
+            ColorCollection.Add(new ColorItem( Colors.Black, nameof(Colors.Black)));
+            ColorCollection.Add(new ColorItem( Colors.Yellow, nameof(Colors.Yellow)));
+            ColorCollection.Add(new ColorItem( Colors.Green, nameof(Colors.Green)));
+            ColorCollection.Add(new ColorItem( Colors.Gray, nameof(Colors.Gray)));
+            ColorCollection.Add(new ColorItem( Colors.PaleGreen, nameof(Colors.PaleGreen)));
+            ColorCollection.Add(new ColorItem( Colors.Violet, nameof(Colors.Violet)));
+            ColorCollection.Add(new ColorItem( Colors.CadetBlue, nameof(Colors.CadetBlue)));
         }
-        private ObservableCollection<ColorsServices> ColorCollection
+        public ObservableCollection<ColorItem> ColorCollection
         { get; set; }
 
-        public ObservableCollection<ColorsServices> ColorList
-        {
-            get { return ColorCollection; }
-            set { ColorCollection = value; }
-        }
-
-        public ColorsServices selectedItem { get; set; }
+        public ColorItem selectedItem { get; set; }
 
         readonly MyMathModel _model = new MyMathModel();
         public MainVM()
         {
-            ColorCollection = new ObservableCollection<ColorsServices>();
-            ColorList = new ObservableCollection<ColorsServices>();
+            ColorCollection = new ObservableCollection<ColorItem>();            
             GetColorId();
 
             //таким нехитрым способом мы пробрасываем изменившиеся свойства модели во View
@@ -108,26 +101,13 @@ namespace WpfApp5
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
-    public class ColorsServices : BaseViewModel
+    public class ColorItem : BaseViewModel
     {
-        public ColorsServices(int id, Color name, string textName)
+        public ColorItem( Color name, string textName)
         {
-            Id = id;
+            
             Name = name;
             TextName = textName;
-        }
-        private int id;
-        public int Id
-        {
-            get
-            {
-                return id;
-            }
-            set
-            {
-                id = value;
-                OnPropertyChanged( nameof(Id));
-            }
         }
 
         private Color name;
@@ -215,9 +195,32 @@ namespace WpfApp5
 
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            ColorsServices tt = ((WpfApp5.ColorsServices)((object[])e.AddedItems)[0]);
-            ColorsServices tt1 = (sender as ComboBox).SelectedItem as ColorsServices;
-            ColorsServices tt2 = ssmain.selectedItem;
+            ColorItem tt = ((WpfApp5.ColorItem)((object[])e.AddedItems)[0]);
+            ColorItem tt1 = (sender as ListBox).SelectedItem as ColorItem;
+            ColorItem tt2 = ssmain.selectedItem;
+        }
+
+        private void comboBox1_PreviewMouseUp(object sender, MouseButtonEventArgs e)
+        {            
+            string[] pos = (sender as ListBox).SelectedItem.ToString().Split(' ');            
+            
+            var color1 = (Color)ColorConverter.ConvertFromString(pos[1]);
+
+            //Color ssss = Color.
+        }
+
+        private void Button_Click_2(object sender, RoutedEventArgs e)
+        {
+            Window2 w2 = new Window2();
+            w2.Show();
+        }
+
+        private void Button_Click_3(object sender, RoutedEventArgs e)
+        {
+            Window3 window3 = new Window3();
+            window3.Owner = this;
+            window3.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+            window3.ShowDialog();
         }
     }
 }

@@ -10,13 +10,43 @@
         <local:MainVM/>
         <!-- Устанавливаем DataContext -->
     </Window.DataContext>
+    <Window.Resources>
+        <ObjectDataProvider ObjectInstance="{x:Type Colors}" MethodName="GetProperties" x:Key="colorPropertiesOdp" />
+    </Window.Resources>
     <Grid>
-        <ComboBox Width="150" ItemsSource="{Binding ColorList}" Height="30" Margin="172,112,470,277" SelectedItem="{Binding selectedItem}" SelectionChanged="ComboBox_SelectionChanged">
-            
-            <ComboBox.ItemTemplate>
-                <DataTemplate DataType="{x:Type local:ColorsServices}">
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <ListBox Name="comboBox1" Margin="10" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" Grid.Row="0" Grid.Column="0"
+                  ItemsSource="{Binding Source={StaticResource colorPropertiesOdp}}" SelectedValuePath="Name" PreviewMouseUp="comboBox1_PreviewMouseUp" >
+            <ListBox.ItemTemplate>
+                <DataTemplate DataType="{x:Type Colors}">
                     <DockPanel LastChildFill="True">
-                        <Rectangle Width="15" Height="15"  DockPanel.Dock="Left" >   <!--Ellipse Height="15" Width="15" VerticalAlignment="Center"--> 
+                        <Rectangle Width="15" Height="15"  DockPanel.Dock="Left" >
+                            <!--Ellipse Height="15" Width="15" VerticalAlignment="Center"-->
+                            <Rectangle.Fill>
+                                <SolidColorBrush Color="{Binding Name}"/>
+                            </Rectangle.Fill>
+                        </Rectangle>
+                        <TextBlock Text="{Binding Name}" Margin="10,0,0,0"/>
+                    </DockPanel>
+                </DataTemplate>
+
+            </ListBox.ItemTemplate>
+        </ListBox>
+
+        <ListBox ItemsSource="{Binding ColorCollection}" Margin="10" SelectedItem="{Binding selectedItem}" SelectionChanged="ComboBox_SelectionChanged" Grid.Row="0" Grid.Column="1">
+            <ListBox.ItemTemplate>
+                <DataTemplate DataType="{x:Type local:ColorItem}">
+                    <DockPanel LastChildFill="True">
+                        <Rectangle Width="15" Height="15"  DockPanel.Dock="Left" >
+                            <!--Ellipse Height="15" Width="15" VerticalAlignment="Center"-->
                             <Rectangle.Fill>
                                 <SolidColorBrush Color="{Binding Name}"/>
                             </Rectangle.Fill>
@@ -24,25 +54,27 @@
                         <TextBlock Text="{Binding TextName}" VerticalAlignment="Center" Margin="2"/>
                     </DockPanel>
                 </DataTemplate>
-            </ComboBox.ItemTemplate>
-        </ComboBox>
+            </ListBox.ItemTemplate>
+        </ListBox>
         <!-- Число для добавления в коллекцию -->
-        <StackPanel Orientation="Horizontal" Width="500" Height="50" Margin="32,57,268,327">
+        <StackPanel Orientation="Horizontal" Width="500" Margin="5" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
+            <ListBox  x:Name="TheListBox" Margin="10" MinWidth="150" ItemsSource="{Binding MyValues}" Grid.Row="0" Grid.Column="2"/>
             <TextBox x:Name="TheNumber" Width="50" Margin="5" Height="30"/>
-            <Button Content="Add" Margin="5" Command="{Binding AddCommand}"
-                    CommandParameter="{Binding ElementName=TheNumber, Path=Text}" Height="30" Width="81"/>
+            <Button Content="Add" Margin="5" Command="{Binding AddCommand}" CommandParameter="{Binding ElementName=TheNumber, Path=Text}" Height="30" Width="81"/>
+            <!-- Кнопка удаления из коллекции -->
+            <Button Content="Remove" Margin="5" Height="30" Command="{Binding RemoveCommand}"  CommandParameter="{Binding ElementName=TheListBox, Path=SelectedIndex}" Width="81"/>
+            <!-- Коллекция -->
+            <!-- Сумма -->
+            <TextBox Text="{Binding Sum, Mode=OneWay}" Margin="5" Width="50" Height="20"/>
+
         </StackPanel>
-        <!-- Сумма -->
-        <TextBox Text="{Binding Sum, Mode=OneWay}" Margin="5" Width="50" Height="20"/>
-        <!-- Кнопка удаления из коллекции -->
-        <Button VerticalAlignment="Top" Content="Remove"
-                Width="130" Margin="5"
-                Command="{Binding RemoveCommand}"
-                CommandParameter="{Binding ElementName=TheListBox, Path=SelectedIndex}"/>
-        <!-- Коллекция -->
-        <ListBox  x:Name="TheListBox" Margin="640,57,10,277" MinWidth="150" ItemsSource="{Binding MyValues}" Width="120" Height="100"/>
-        <Button Content="Button" Click="Button_Click" Margin="564,270,37,125"/>
-        <Image x:Name="imager1" HorizontalAlignment="Left" Height="119" Margin="66,290,0,0" VerticalAlignment="Top" Width="192"/>
-        <Button Content="Button" HorizontalAlignment="Left" Margin="282,368,0,0" VerticalAlignment="Top" Click="Button_Click_1"/>
+        
+        <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="2">
+            <Button Content="open window1" Click="Button_Click" VerticalAlignment="Bottom" MinHeight="20" Margin="5"/>
+            <Button Content="open window2" VerticalAlignment="Bottom" Click="Button_Click_2" MinHeight="20" Margin="5"/>
+            <Button Content="open window3" VerticalAlignment="Bottom" Margin="5" MinHeight="20" Click="Button_Click_3"/>
+        </StackPanel>
+        <Image x:Name="imager1" HorizontalAlignment="Left" Height="119" VerticalAlignment="Top" Width="226" Grid.Row="0" Grid.Column="2" Margin="10"/>
+        <Button Content="Button" HorizontalAlignment="Left" Margin="5" VerticalAlignment="Bottom" Click="Button_Click_1" Grid.Row="0" Grid.Column="2"/>
     </Grid>
 </Window>

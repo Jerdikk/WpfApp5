@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -11,6 +12,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace WpfApp5
 {
@@ -95,6 +97,9 @@ namespace WpfApp5
             }
         }
 
+
+        DrawingVisual visual;
+
         public Window1()
         {
             InitializeComponent();
@@ -102,6 +107,9 @@ namespace WpfApp5
             this.Activated += Window1_Activated;
 
             DrawTest();
+
+
+
         }
 
         private void Window1_Activated(object sender, EventArgs e)
@@ -161,7 +169,7 @@ namespace WpfApp5
 
         void DrawTest()
         {
-            drawTest.Children.Clear();
+           /* drawTest.Children.Clear();
 
             DrawingVisual drawingVisual = new DrawingVisual();
 
@@ -196,7 +204,7 @@ namespace WpfApp5
                 geometryContext.PolyLineTo(points, true, true);
             }
 
-            DrawingVisual visual = new DrawingVisual();
+            visual = new DrawingVisual();
             using (DrawingContext dc = visual.RenderOpen())
             {
               //  Pen drawingpen = new Pen(Brushes.Black, 3);
@@ -214,10 +222,55 @@ namespace WpfApp5
             cnvDraw.AddVisual(visual);
 
             testDrawVisual.Children.Add(cnvDraw);
-
+            */
         }
 
+        bool isDrawing = false;
 
+        void DrawingMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            Mouse.Capture(DrawingTarget);
+            isDrawing = true;
+            StartFigure(e.GetPosition(DrawingTarget));
+        }
+
+        void DrawingMouseMove(object sender, MouseEventArgs e)
+        {
+            if (!isDrawing)
+                return;
+            AddFigurePoint(e.GetPosition(DrawingTarget));
+        }
+
+        void DrawingMouseUp(object sender, MouseButtonEventArgs e)
+        {
+            AddFigurePoint(e.GetPosition(DrawingTarget));
+            EndFigure();
+            isDrawing = false;
+            Mouse.Capture(null);
+        }
+        PathFigure currentFigure;
+        void StartFigure(Point start)
+        {
+            currentFigure = new PathFigure() { StartPoint = start };
+            var currentPath =
+                new Path()
+                {
+                    Stroke = Brushes.Red,
+                    StrokeThickness = 3,
+                    Data = new PathGeometry() { Figures = { currentFigure } }
+                };
+            DrawingTarget.Children.Add(currentPath);
+        }
+
+        void AddFigurePoint(Point point)
+        {
+            currentFigure.Segments.Add(new LineSegment(point, isStroked: true));
+        }
+
+        void EndFigure()
+        {
+            currentFigure = null;
+        }
 
     }
 }
